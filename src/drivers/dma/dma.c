@@ -131,17 +131,6 @@ void dma_init (void)
     // Only separate fields support!!!!
     DCH5ECONbits.CHSIRQ = _SPI1_TX_VECTOR;      // Channel Transfer Start IRQ    
 
-    /**************************************************************************/
-    /* Channel 6 config - to copy data from I2S2 module to EP5 FIFO buffer    */
-    /**************************************************************************/
-    DCH6SSA = KVA_TO_PA( &SPI2BUF );            // Source data start address (I2S2 FIFO buffer)
-    DCH6SSIZ = 4;                               // Source data saze (I2S FIFO data size - 4 bytes)
-    DCH6CSIZ = 4;                               // Cell data size: channel audio data size (4 bytes)
-    DCH6CONbits.CHPRI = 2;                      // Channel priority
-    DCH6CONbits.CHAEN = 1;                      // Channel is continuously enabled, and not automatically disabled after a block transfer is complete
-    // Only separate fields support!!!!
-    DCH6ECONbits.CHSIRQ = _SPI2_RX_VECTOR;      // Channel Transfer Start IRQ
-    DCH6ECONbits.SIRQEN = 1;                    // Enable transfer IRQ
 }
 
 /*

@@ -20,9 +20,6 @@ extern "C" {
 #endif
 
 
-#define     _I2S_Input_Transfer_Start()             SPI2CONSET = _SPI2CON_ON_MASK
-#define     _I2S_Input_Transfer_Stop()              SPI2CONCLR = _SPI2CON_ON_MASK
-
 
 void i2s_init (void);
 void i2s_div_set (const uint8_t ovsmax, const uint8_t fmode);

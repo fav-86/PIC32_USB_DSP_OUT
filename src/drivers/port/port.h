@@ -19,8 +19,6 @@ extern "C" {
 #define FS1_SET_HIGH()                  LATBSET = _BIT(8)
 #define FS1_SET_LOW()                   LATBCLR = _BIT(8)
 
-// Turn On exteral interrupt on LRCK input pin
-#define _PORT_Input_Transfer_Sync()     IEC0SET = _IEC0_INT1IE_MASK
 
     
     
