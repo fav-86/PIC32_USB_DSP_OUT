@@ -7,6 +7,7 @@
       <logicalFolder name="f1" displayName="app" projectFiles="true">
         <itemPath>src/app/system.h</itemPath>
         <itemPath>src/app/dsp.h</itemPath>
+        <itemPath>../PIC32MZ_USB_DSP.X/src/app/config.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="drivers" projectFiles="true">
         <logicalFolder name="f1" displayName="usb" projectFiles="true">
@@ -77,6 +78,7 @@
     <Elem>src/mcu_xc41</Elem>
     <Elem>src/drivers/dma</Elem>
     <Elem>src/drivers/uart</Elem>
+    <Elem>../PIC32MZ_USB_DSP.X/src/app</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -452,6 +454,8 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d0fffff"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/Projects/git_projects/PIC32_USB_DSP_OUT.X/debug/default/PIC32_USB_DSP_OUT_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
