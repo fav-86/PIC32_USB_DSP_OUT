@@ -186,21 +186,20 @@ void dsp_init (void)
 {
     tDspCtrl.fmode = OUT_FRM_MODE;
     tDspCtrl.tFir.ovsmax = FIR_OVS_MAX;
+    tDspCtrl.tFir.outbsize = 32 << tDspCtrl.tFir.ovsmax;
     tDspCtrl.tDoP.format = DSP_DATA_MODE_PCM;
     tDspCtrl.tDoP.cnt = 0;  
     tDspCtrl.tPCM.shpena = NOISE_SHAPING_SET;
     tDspCtrl.tPCM.dithen = DITHERING_SET;
-    tDspCtrl.tPCM.roundw = ROUND_DATA_WIDTH_bits;
+    tDspCtrl.tPCM.roundw = ROUND_DATA_WIDTH_bits;    
     
-#if OUT_FRM_MODE == OUT_FRM_PCM16
-    tDspCtrl.tFir.outbsize = 16 << tDspCtrl.tFir.ovsmax;
+#if OUT_FRM_MODE == OUT_FRM_PCM16    
     dspOutPtrInc = 2 << tDspCtrl.tFir.ovsmax;     // set processing samples num    
     if (tDspCtrl.tPCM.shpena)
         ORND_callback = shprnd_f16;
     else
         ORND_callback = dthrnd_f16;
 #elif OUT_FRM_MODE == OUT_FRM_PCM32
-    tDspCtrl.tFir.outbsize = 32 << tDspCtrl.tFir.ovsmax;
     dspOutPtrInc = 4 << tDspCtrl.tFir.ovsmax;     // set processing samples num    
     if (tDspCtrl.tPCM.shpena)
         ORND_callback = shprnd_f32;

@@ -21,7 +21,6 @@ void port_init (void)
             ;
     TRISECLR = 0
             | _BIT(4)                       // test output E4 - 64pin
-            | _BIT(3)                       // SSO4
             ;
             
     /*Configure ports Pull Up. 1 - pull enable*/
@@ -40,19 +39,12 @@ void port_init (void)
     
     // I2S1 remappable outputs
     RPD3R = 0x5;    // 0101 = SDO1
-    RPD4R = 0x5;    // 0101 = SS1out
-    
-    // I2S2 remappable inputs
-    SDI2R = 0x1;    // 0001 = RPG7 - SDI2
-    SS2R = 0x1;     // 0001 = RPG9 - SS2in
     
     // I2S3 remappable outputs
     RPB9R = 0x7;    // 0111 = SDO3
-    //RPB15R = 0x7;   // 0111 = SS3
     
     // I2S4 remappable outputs
     RPB14R = 0x8;    // 1000 = SDO4
-    //RPE3R = 0x8;     // 1000 = SS4
 }
 
 

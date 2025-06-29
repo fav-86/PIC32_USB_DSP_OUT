@@ -52,14 +52,11 @@ typedef union {
 }tDWORD;
 
 
-typedef union {
-    int events;
-    struct {
-        uint16_t tasks;
-        int16_t snum;
-    }w;
-}tSYS_EVENTS;
-    
+typedef struct {
+    uint16_t tasks;
+    int16_t snum;
+} tSYS_EVENTS;
+
 
 
 #define OUT_FRM_PCM16   0
@@ -137,17 +134,18 @@ typedef union {
 #define SYS_TASK_USB_STREAM_OUT_INIT    (0x01 << 2)
 
 
+
 // System tasks control macroses
-#define _System_Task_Set(bit)           systemTasks.w.tasks |= (uint16_t)bit
-#define _System_Task_Clr(bit)           systemTasks.w.tasks &= ~((uint16_t)bit)
-#define _System_Task_Check(bit)         (systemTasks.w.tasks & ((uint16_t)bit))
+#define _System_Task_Set(bit)           systemTasks.tasks |= (uint16_t)(bit)
+#define _System_Task_Clr(bit)           systemTasks.tasks &= ~(uint16_t)(bit)
+#define _System_Task_Check(bit)         (systemTasks.tasks & (uint16_t)(bit))
+#define _System_TaskAll_Check()         systemTasks.tasks
 
-#define _System_Num_Set(num)            systemTasks.w.snum = (num)
-#define _System_Num_Inc(num)            systemTasks.w.snum += (num)
-#define _System_Num_Dec(num)            systemTasks.w.snum -= (num)
-#define _System_Num_Check()             systemTasks.w.snum
+#define _System_Num_Set(num)            systemTasks.snum = (num)
+#define _System_Num_Inc(num)            systemTasks.snum += (num)
+#define _System_Num_Dec(num)            systemTasks.snum -= (num)
+#define _System_Num_Check()             systemTasks.snum
 
-#define _System_Events_Check()          systemTasks.w.tasks
 
 
 

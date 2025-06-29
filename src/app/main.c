@@ -34,7 +34,7 @@ void main (void)
     // Main Loop
     while (true)
     {
-        if (_System_Num_Check() <= 0 && _System_Events_Check() == 0)   // If no more system tasks
+        if (_System_Num_Check() <= 0 && _System_TaskAll_Check() == 0)   // If no more system tasks
         {
             GO_TO_IDLE();              // go to idle mode with clocks enabled
         }
