@@ -22,10 +22,10 @@ void main (void)
     uart_init(8200);
     usb_PL_init();
     
+#ifdef PIC32MZxxxxEC
     /*
         When enabling the USB PLL, add a three second (For MI32MZxxxEC only!)
         delay before turning on the USB module  */
-#ifdef PIC32MZxxxxEC
     tmr_Task_Delayed_mS_set(SYS_TASK_USB_CONNECT, 3000);
 #else
     _System_Task_Set( SYS_TASK_USB_CONNECT );

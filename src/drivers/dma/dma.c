@@ -3,24 +3,33 @@
 #include "dma.h"
 
 #if OUT_FRM_MODE == OUT_FRM_PCM16
-    #define WCK_VAL     0x0001u
-    #define DG_VAL      0xFF81u
+    #define WCK_VAL     WCK16_VAL
+    #define DG_VAL      DG16_VAL
     #define WSIZ        2
     #define ZERO_VAL    0
     #define WCKO_ENA
-    //#define DGO_ENA
 #elif OUT_FRM_MODE == OUT_FRM_PCM32
-    #define WCK_VAL     0x00000001
-    #define DG_VAL      0xFFFFE001
+    #define WCK_VAL     WCK32_VAL
+    #define DG_VAL      DG32_VAL
     #define WSIZ        4
     #define ZERO_VAL    0
     #define WCKO_ENA
-    #define DGO_ENA
 #else
     #define WCK_VAL     0
     #define DG_VAL      0
     #define WSIZ        4
     #define ZERO_VAL    0x0fa50fa5
+#endif
+
+
+#if SPI_BUF_DL == SPI1BUF
+    #define _SPI_TX_VECTOR  _SPI1_TX_VECTOR
+#elif SPI_BUF_DL == SPI2BUF
+    #define _SPI_TX_VECTOR  _SPI2_TX_VECTOR
+#elif SPI_BUF_DL == SPI3BUF
+    #define _SPI_TX_VECTOR  _SPI3_TX_VECTOR
+#elif SPI_BUF_DL == SPI4BUF
+    #define _SPI_TX_VECTOR  _SPI4_TX_VECTOR
 #endif
 
 
@@ -50,66 +59,66 @@ void dma_init (void)
     DMACONbits.ON = 1;
     
     /**************************************************************************/
-    /* Channel 0 config - to copy left ch data from sample buffer to SPI1     */
+    /* Channel 0 config - to copy left ch data from sample buffer to SPI_SDO  */
     /**************************************************************************/    
     DCH0SSA = KVA_TO_PA( sampleBuffer );        // Source start address
-    DCH0DSA = KVA_TO_PA( &SPI1BUF );            // Destination start address
+    DCH0DSA = KVA_TO_PA( &SPI_BUF_DL );         // Destination start address
     DCH0SSIZ = WSIZ;                            // Source size
     DCH0DSIZ = WSIZ;                            // Destination size
     DCH0CSIZ = WSIZ;                            // Cell data size: channel audio data size (4 bytes)
     DCH0CONbits.CHPRI = 2;                      // Channel priority
     DCH0CONbits.CHAEN = 1;                      // Channel is continuously enabled, and not automatically disabled after a block transfer is complete
     // Only separate fields support!!!!
-    DCH0ECONbits.CHSIRQ = _SPI1_TX_VECTOR;      // Channel Transfer Start IRQ
+    DCH0ECONbits.CHSIRQ = _SPI_TX_VECTOR;       // Channel Transfer Start IRQ
     DCH0ECONbits.SIRQEN = 1;                    // Enable transfer IRQ
     DCH0CONbits.CHEN = 1;                       // Enable DMA channel
     
     /**************************************************************************/
-    /* Channel 1 config - to copy right ch data from sample buffer to SPI3    */
+    /* Channel 1 config - to copy right ch data from sample buffer to SPI_SDO */
     /**************************************************************************/
     DCH1SSA = KVA_TO_PA( (void*)sampleBuffer + WSIZ ); // Source start address
-    DCH1DSA = KVA_TO_PA( &SPI3BUF );            // Destination start address
+    DCH1DSA = KVA_TO_PA( &SPI_BUF_DR );         // Destination start address
     DCH1SSIZ = WSIZ;                            // Source size
     DCH1DSIZ = WSIZ;                            // Destination size
     DCH1CSIZ = WSIZ;                            // Cell data size: channel audio data size (4 bytes)
     DCH1CONbits.CHPRI = 2;                      // Channel priority
     DCH1CONbits.CHAEN = 1;                      // Channel is continuously enabled, and not automatically disabled after a block transfer is complete
      // Only separate fields support!!!!
-    DCH1ECONbits.CHSIRQ = _SPI1_TX_VECTOR;      // Channel Transfer Start IRQ
+    DCH1ECONbits.CHSIRQ = _SPI_TX_VECTOR;       // Channel Transfer Start IRQ
     DCH1ECONbits.SIRQEN = 1;                    // Enable transfer IRQ
     DCH1CONbits.CHEN = 1;                       // Enable DMA channel
     
     /**************************************************************************/
-    /* Channel 2 config - to copy word clock data to SPI4                     */
+    /* Channel 2 config - to copy word clock data to SPI_SDO                  */
     /**************************************************************************/
 #ifdef WCKO_ENA
     DCH2SSA = KVA_TO_PA( &wckData );            // Source start address
-    DCH2DSA = KVA_TO_PA( &SPI4BUF );            // Destination start address
+    DCH2DSA = KVA_TO_PA( &SPI_BUF_WC );         // Destination start address
     DCH2SSIZ = WSIZ;                            // Source size
     DCH2DSIZ = WSIZ;                            // Destination size
     DCH2CSIZ = WSIZ;                            // Cell data size: channel audio data size (4 bytes)
     DCH2CONbits.CHPRI = 2;                      // Channel priority
     DCH2CONbits.CHAEN = 1;                      // Channel is continuously enabled, and not automatically disabled after a block transfer is complete
      // Only separate fields support!!!!
-    DCH2ECONbits.CHSIRQ = _SPI1_TX_VECTOR;      // Channel Transfer Start IRQ
+    DCH2ECONbits.CHSIRQ = _SPI_TX_VECTOR;       // Channel Transfer Start IRQ
     DCH2ECONbits.SIRQEN = 1;                    // Enable transfer IRQ
     DCH2CONbits.CHEN = 1;                       // Enable DMA channel
 #endif
     /**************************************************************************/
-    /* Channel 3 config - to copy deglitcher clock data to SPI2               */
+    /* Channel 3 config - to copy deglitcher clock data to SPI_SDO            */
     /**************************************************************************/
-#ifdef DGO_ENA
+#if DGO_ENA == DG_OUT_ENABLE
     DCH3SSA = KVA_TO_PA( &dgData );             // Source start address
-    DCH3DSA = KVA_TO_PA( &SPI2BUF );            // Destination start address
+    DCH3DSA = KVA_TO_PA( &SPI_BUF_DG );         // Destination start address
     DCH3SSIZ = WSIZ;                            // Source size
     DCH3DSIZ = WSIZ;                            // Destination size
     DCH3CSIZ = WSIZ;                            // Cell data size: channel audio data size (4 bytes)
     DCH3CONbits.CHPRI = 2;                      // Channel priority
     DCH3CONbits.CHAEN = 1;                      // Channel is continuously enabled, and not automatically disabled after a block transfer is complete
      // Only separate fields support!!!!
-    DCH3ECONbits.CHSIRQ = _SPI1_TX_VECTOR;      // Channel Transfer Start IRQ
+    DCH3ECONbits.CHSIRQ = _SPI_TX_VECTOR;       // Channel Transfer Start IRQ
     DCH3ECONbits.SIRQEN = 1;                    // Enable transfer IRQ
-    //DCH3CONbits.CHEN = 1;                     // Enable DMA channel
+    DCH3CONbits.CHEN = 1;                       // Enable DMA channel
 #endif
     /**************************************************************************/
     /* Channel 4 config - to copy one sample from OUTPUT FIFO to sample buffer*/
@@ -120,16 +129,16 @@ void dma_init (void)
     DCH4CONbits.CHPRI = 1;                      // Channel priority
     DCH4CONbits.CHAEN = 1;                      // Channel is continuously enabled, and not automatically disabled after a block transfer is complete
     // Only separate fields support!!!!
-    DCH4ECONbits.CHSIRQ = _SPI1_TX_VECTOR;      // Channel Transfer Start IRQ
+    DCH4ECONbits.CHSIRQ = _SPI_TX_VECTOR;       // Channel Transfer Start IRQ
     DCH4ECONbits.SIRQEN = 1;                    // Enable transfer IRQ
 
     /**************************************************************************/
     /* Channel 5 config - to copy zero data to OUTPUT FIFO                    */
     /**************************************************************************/
     DCH5SSA = KVA_TO_PA( &zeroData );           // Source data start address
-    DCH5SSIZ = 4;                               // Source size    
+    DCH5SSIZ = 4;                               // Source size
     // Only separate fields support!!!!
-    DCH5ECONbits.CHSIRQ = _SPI1_TX_VECTOR;      // Channel Transfer Start IRQ    
+    DCH5ECONbits.CHSIRQ = _SPI_TX_VECTOR;       // Channel Transfer Start IRQ     
 
 }
 

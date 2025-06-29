@@ -23,8 +23,8 @@ static const int aVolumeLog[101] = {
 };
 
 volatile static struct {
-    uint64_t *pCurr;	// destination curr pointer
-    uint64_t *pEnd;		// destination end address
+    void *pCurr;	// destination curr pointer
+    void *pEnd;		// destination end address
     int size;		// destination lenght in bytes
     int volumeL;	// volume value: min - 0, max - 0x40000000
     int volumeR;	// volume value: min - 0, max - 0x40000000
@@ -57,8 +57,8 @@ volatile static struct {
 } tSdmCtrl;
 
 volatile static struct {
-    uint64_t *pCurr;    // destination pointer
-    uint64_t *pEnd;	    // destination end address    
+    void *pCurr;    // destination pointer
+    void *pEnd;	    // destination end address    
     int size;	    // destination size in bytes
     int data[2];    // last data sample
     int zero;	    // zero value
@@ -191,7 +191,7 @@ void dsp_init (void)
     tDspCtrl.tDoP.cnt = 0;  
     tDspCtrl.tPCM.shpena = NOISE_SHAPING_SET;
     tDspCtrl.tPCM.dithen = DITHERING_SET;
-    tDspCtrl.tPCM.roundw = ROUND_DATA_WIDTH_bits;    
+    tDspCtrl.tPCM.roundw = ROUND_DATA_WIDTH_bits;
     
 #if OUT_FRM_MODE == OUT_FRM_PCM16    
     dspOutPtrInc = 2 << tDspCtrl.tFir.ovsmax;     // set processing samples num    
@@ -243,7 +243,7 @@ void dsp_init (void)
     tAttCtrl.volumeL = 0x00400000;
     tAttCtrl.volumeR = 0x00400000;
     tAttCtrl.lfsr = 100;
-    tAttCtrl.off = DC_OFFSET_LSB << (31 - OUTPUT_DATA_WIDTH_bits);
+    tAttCtrl.off = DC_OFFSET_LSB << (24 - OUTPUT_DATA_WIDTH_bits);
     
     // Output data DMA address set
     _DMA_OutputSourceAddress_Set( KVA_TO_PA(dspOutputFIFO) );
@@ -331,7 +331,10 @@ void dsp_start_init(uint8_t sfreq, uint8_t wlen)
     // Cleare samples num
     _System_Num_Set(0);
     // Init output data pointer
-    dspOutPtr = (OUTPUT_BUFFER_bSIZE/8)*3/4;
+    uint32_t dmaptr = DMA_OUTPUT_TRANSFET_PTR;
+    dmaptr &= 0xfffffff8;
+    dspOutPtr = dmaptr + (OUTPUT_BUFFER_bSIZE/8)*3/4;
+    dspOutPtr &= (OUTPUT_BUFFER_bSIZE/8-1);
     // start DMA output
     dma_parallel_output_start(OUTPUT_BUFFER_bSIZE);
 }
@@ -571,9 +574,8 @@ void dsp_proc (void)
     // Output overflow and round processing
     ORND_callback( rndbuf, &dspOutputFIFO[dspOutPtr], &tRndCtrl, tDspCtrl.tFir.outbsize );
 #else
-    //LATESET = _BIT(4);
+    // Output SDM processing
     SDM5_callback( rndbuf, &dspOutputFIFO[dspOutPtr], &tSdmCtrl );
-    //LATECLR = _BIT(4);
 #endif
     
     // Output pointer increment & masking
