@@ -8,7 +8,7 @@
  port_init() - mcu port power up initialisation
  */
 void port_init (void)
-{ 
+{
     OSCSEL_SET_LOW();                      // set oscsel to 48k domain
     
     /*Configure ports direction. 1 - input, 0 - output*/
@@ -18,7 +18,7 @@ void port_init (void)
     TRISBCLR = 0
             | _BIT(5) | _BIT(8)             // FS[1:0] outputs to control ADC sempling frequency
             | _BIT(9) | _BIT(14) | _BIT(15) // I2S3 DSD output
-            ;    
+            ;
     TRISECLR = 0
             | _BIT(4)                       // test output E4 - 64pin
             | _BIT(3)                       // SSO4
