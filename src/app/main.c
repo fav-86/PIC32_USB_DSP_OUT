@@ -25,8 +25,11 @@ void main (void)
     /*
         When enabling the USB PLL, add a three second (For MI32MZxxxEC only!)
         delay before turning on the USB module  */
-    //tmr_Task_Delayed_mS_set(SYS_TASK_USB_CONNECT, 3000);
+#ifdef PIC32MZxxxxEC
+    tmr_Task_Delayed_mS_set(SYS_TASK_USB_CONNECT, 3000);
+#else
     _System_Task_Set( SYS_TASK_USB_CONNECT );
+#endif
     
     // Enable Global Interrupts
     __builtin_enable_interrupts();

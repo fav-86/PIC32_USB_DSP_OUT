@@ -8,6 +8,11 @@
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
+
+
+
+
+
 // <editor-fold defaultstate="collapsed" desc="Configuration Bits">
 
 /*** DEVCFG0 ***/
@@ -45,8 +50,16 @@
 #pragma config FPLLICLK =   PLL_FRC
 #pragma config FPLLMULT =   MUL_46          // 8MHz x 75 = 600MHz (allowed range from 350 to 700 MHz)
 #pragma config FPLLODIV =   DIV_2           // 600MHz/2 = 300MHz (60MHz - minimum frequecy when USB HS is ON )
+
+    #if PRIMARY_CRYSTAL_FREQUENCY_Hz == 12000000u
 #pragma config UPLLFSEL =   FREQ_12MHZ
-//#pragma config UPLLEN =     ON              // Enable to PIC32MZxxxxECH
+    #elif PRIMARY_CRYSTAL_FREQUENCY_Hz == 24000000u
+#pragma config UPLLFSEL =   FREQ_24MHZ
+    #endif
+
+    #ifdef PIC32MZxxxxEC
+#pragma config UPLLEN =     ON
+    #endif
 
 /*** DEVCFG3 ***/
 #pragma config USERID =     0xffff

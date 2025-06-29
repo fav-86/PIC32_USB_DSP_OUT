@@ -24,14 +24,25 @@
 #define DITHERING_DISABLE       0
 #define DITHERING_ENABLE        1
 
-
+#define DG_OUT_DISABLE          0
+#define DG_OUT_ENABLE           1
 
 // *****************************************************************************
 // ************* User defines **************************************************
 // *****************************************************************************
+// Define MCU series
+//#define PIC32MZxxxxEC
+#define PIC32MZxxxxEF
+
+// Define primary clock frequency
+#define PRIMARY_CRYSTAL_FREQUENCY_Hz    12000000u
+// Define secondary clock frequency
+#define SECONDARY_CRYSTAL_FREQUENCY_Hz  0u
+
 /* Define I2S masterclock */
 // #define I2S_MCLK_512Fs
 #define I2S_MCLK_1024Fs
+
 /* Define output frame mode */
 #define OUT_FRM_MODE                    OUT_FRM_PCM16
 /* Define default max FIR oversampling ratio */
@@ -52,6 +63,14 @@
 #define NOISE_SHAPING_SET               PCM_NSHAPE_ENABLE
 // Set output DC offset in 24bit LSB-s
 #define DC_OFFSET_LSB                   0
+// Enable deglitcher output
+#define DGO_ENA                         DG_OUT_DISABLE
+// Set 16bit frame word-clock & deglitcher waves values
+#define WCK16_VAL                       0x0001u
+#define DG16_VAL                        0xFF81u
+// Set 32bit frame word-clock & deglitcher waves values
+#define WCK32_VAL                       0x00000001
+#define DG32_VAL                        0xFFFFE001
 // *****************************************************************************
 // *****************************************************************************
 // *****************************************************************************

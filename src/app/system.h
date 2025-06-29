@@ -62,10 +62,7 @@ typedef struct {
 
 #define GO_TO_IDLE()                    asm volatile ( "wait" )
 
-// Define primary clock frequency
-#define PRIMARY_CRYSTAL_FREQUENCY_Hz    12000000u
-// Define secondary clock frequency
-#define SECONDARY_CRYSTAL_FREQUENCY_Hz  0u
+
     
     
 // System task bits list
