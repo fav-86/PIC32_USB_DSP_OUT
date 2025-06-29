@@ -185,7 +185,7 @@ volatile static void (*SDM5_callback)(void *pSrc, void *pDst, volatile void *pSd
 void dsp_init (void)
 {
     tDspCtrl.fmode = OUT_FRM_MODE;
-    tDspCtrl.tFir.ovsmax = FIR_OVS_MAX;    
+    tDspCtrl.tFir.ovsmax = FIR_OVS_MAX;
     tDspCtrl.tDoP.format = DSP_DATA_MODE_PCM;
     tDspCtrl.tDoP.cnt = 0;  
     tDspCtrl.tPCM.shpena = NOISE_SHAPING_SET;

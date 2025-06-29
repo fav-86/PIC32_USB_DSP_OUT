@@ -12,12 +12,7 @@ extern "C" {
     
 #define OSCSEL_SET_HIGH()               LATDSET = _BIT(5)          // set oscsel to high
 #define OSCSEL_SET_LOW()                LATDCLR = _BIT(5)          // set oscsel to low
-    
-#define FS0_SET_HIGH()                  LATBSET = _BIT(5)
-#define FS0_SET_LOW()                   LATBCLR = _BIT(5)
 
-#define FS1_SET_HIGH()                  LATBSET = _BIT(8)
-#define FS1_SET_LOW()                   LATBCLR = _BIT(8)
 
 
     

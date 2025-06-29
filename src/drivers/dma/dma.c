@@ -8,7 +8,7 @@
     #define WSIZ        2
     #define ZERO_VAL    0
     #define WCKO_ENA
-    #define DGO_ENA
+    //#define DGO_ENA
 #elif OUT_FRM_MODE == OUT_FRM_PCM32
     #define WCK_VAL     0x00000001
     #define DG_VAL      0xFFFFE001

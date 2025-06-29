@@ -10,8 +10,6 @@
 void port_init (void)
 { 
     OSCSEL_SET_LOW();                      // set oscsel to 48k domain
-    FS0_SET_LOW();
-    FS1_SET_LOW();
     
     /*Configure ports direction. 1 - input, 0 - output*/
     TRISDCLR = _BIT(1) | _BIT(3) | _BIT(4)  // I2S output pons
@@ -25,9 +23,6 @@ void port_init (void)
             | _BIT(4)                       // test output E4 - 64pin
             | _BIT(3)                       // SSO4
             ;
-    
-    ANSELECLR = _BIT(3) | _BIT(4) | _BIT(5);    
-    ANSELGCLR = _BIT(6) | _BIT(7) | _BIT(9);// Switch Off Analog Function for I2S inputs
             
     /*Configure ports Pull Up. 1 - pull enable*/
     CNPUFSET = _BIT(3); // USBID input Pull-Up
