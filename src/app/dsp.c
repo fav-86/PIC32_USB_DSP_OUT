@@ -339,7 +339,7 @@ void dsp_start_init(uint8_t sfreq, uint8_t wlen)
     _System_Num_Set(0);
     // Init output data pointer
     uint32_t dmaptr = DMA_OUTPUT_TRANSFET_PTR;
-    dmaptr &= 0xfffffff8;
+    dmaptr >>= 3;
     dspOutPtr = dmaptr + (OUTPUT_BUFFER_bSIZE/8)*3/4;
     dspOutPtr &= (OUTPUT_BUFFER_bSIZE/8-1);
     // start DMA output
