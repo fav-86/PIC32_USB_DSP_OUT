@@ -6,13 +6,13 @@
     #define WCK_VAL     WCK16_VAL
     #define DG_VAL      DG16_VAL
     #define WSIZ        2
-    #define ZERO_VAL    0
+    #define ZERO_VAL    (OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits-1))
     #define WCKO_ENA
 #elif OUT_FRM_MODE == OUT_FRM_PCM32
     #define WCK_VAL     WCK32_VAL
     #define DG_VAL      DG32_VAL
     #define WSIZ        4
-    #define ZERO_VAL    0
+    #define ZERO_VAL    (OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits-1))
     #define WCKO_ENA
 #else
     #define WCK_VAL     0

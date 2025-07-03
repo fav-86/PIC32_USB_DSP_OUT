@@ -59,7 +59,7 @@ extern "C" {
 #define SPI_BUF_DG      SPI2BUF     // SPI_SDO to data Deglitcher Clock
 
 // ------- PCM frame type config -----------------------------------------------
-// Set offset binary data format: 1 - enable, 0 - disable
+// Set offset binary data format: 1 - offset bunary, 0 - 2's complement
 #define OFFSET_BINARY                   0
 // Set round data resolution in bits
 #define ROUND_DATA_WIDTH_bits           12

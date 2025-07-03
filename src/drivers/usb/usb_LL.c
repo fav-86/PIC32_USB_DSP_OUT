@@ -189,10 +189,10 @@ static inline void usb_LL_Ep0_Fast_FifoWrite64 (const void *p)
     const uint32_t *p32 = p;
     volatile uint32_t *pf32 = (uint32_t*)&USBFIFO0;
      
-    *pf32 = *p32++; *pf32 = *p32++; *pf32 = *p32++; *pf32 = *p32++;
-    *pf32 = *p32++; *pf32 = *p32++; *pf32 = *p32++; *pf32 = *p32++;
-    *pf32 = *p32++; *pf32 = *p32++; *pf32 = *p32++; *pf32 = *p32++;
-    *pf32 = *p32++; *pf32 = *p32++; *pf32 = *p32++; *pf32 = *p32;
+    *pf32 = p32[0];  *pf32 = p32[1];  *pf32 = p32[2];  *pf32 = p32[3];
+    *pf32 = p32[4];  *pf32 = p32[5];  *pf32 = p32[6];  *pf32 = p32[7];
+    *pf32 = p32[8];  *pf32 = p32[9];  *pf32 = p32[10]; *pf32 = p32[11];
+    *pf32 = p32[12]; *pf32 = p32[13]; *pf32 = p32[14]; *pf32 = p32[15];
     
     USBE0CSR0bits.TXRDY = 1;
 }
