@@ -95,19 +95,19 @@ volatile static struct {
 // FIR stage1 buffer and pointers
 static uint64_t fir1buf[DSP_FIR1_FIFO_SIZE + DSP_FIR1_CELL_SIZE];
 static int rptr1;
-// FIR stage2 buffer pointers
+// FIR stage2 buffer and pointers
 static uint64_t fir2buf[DSP_FIR2_FIFO_SIZE + DSP_FIR2_CELL_SIZE];
 static int rptr2;
 static int wptr2;
-// FIR stage3 buffer pointers
+// FIR stage3 buffer and pointers
 static uint64_t fir3buf[DSP_FIR3_FIFO_SIZE + DSP_FIR3_CELL_SIZE];
 static int rptr3;
 static int wptr3;
-// FIR stage4 buffer pointers
+// FIR stage4 buffer and pointers
 static uint64_t fir4buf[DSP_FIR4_FIFO_SIZE + DSP_FIR4_CELL_SIZE];
 static int rptr4;
 static int wptr4;
-// FIR stage5 buffer pointers
+// FIR stage5 buffer and pointers
 static uint64_t fir5buf[DSP_FIR5_FIFO_SIZE + DSP_FIR5_CELL_SIZE];
 static int rptr5;
 static int wptr5;
@@ -120,13 +120,13 @@ static uint64_t dspOutputFIFO[OUTPUT_BUFFER_bSIZE/8] __attribute__((coherent));
 volatile int dspOutPtr; // Global parameter
 static int dspOutPtrInc;
 
-// read FIR buffer pointers
+// read FIR start buffer pointers
 static uint64_t *prFIR1 = fir1buf;
 static uint64_t *prFIR2 = fir2buf;
 static uint64_t *prFIR3 = fir3buf;
 static uint64_t *prFIR4 = fir4buf;
 static uint64_t *prFIR5 = fir5buf;
-// write FIR buffer pointers
+// write FIR start buffer pointers
 static uint64_t *pwFIR2 = &fir2buf[DSP_FIR2_CELL_SIZE];
 static uint64_t *pwFIR3 = &fir3buf[DSP_FIR3_CELL_SIZE];
 static uint64_t *pwFIR4 = &fir4buf[DSP_FIR4_CELL_SIZE];
@@ -240,10 +240,15 @@ void dsp_init (void)
     // Init volume control structure
     tAttCtrl.pEnd = &fir1buf[DSP_FIR1_FIFO_SIZE + DSP_FIR1_CELL_SIZE];
     tAttCtrl.size = DSP_FIR1_FIFO_bSIZE;
-    tAttCtrl.volumeL = 0x00400000;
-    tAttCtrl.volumeR = 0x00400000;
     tAttCtrl.lfsr = 100;
     tAttCtrl.off = DC_OFFSET_LSB << (24 - OUTPUT_DATA_WIDTH_bits);
+#ifdef ATT_CONST
+    tAttCtrl.volumeL = ATT_CONST;
+    tAttCtrl.volumeR = ATT_CONST;
+#else
+    tAttCtrl.volumeL = VOLUME_ATT_0db;
+    tAttCtrl.volumeR = VOLUME_ATT_0db;
+#endif
     
     // Output data DMA address set
     _DMA_OutputSourceAddress_Set( KVA_TO_PA(dspOutputFIFO) );
@@ -254,8 +259,10 @@ void dsp_init (void)
  */
 void dsp_volume_set (uint8_t volume)
 {
+#ifndef ATT_CONST
     tAttCtrl.volumeL = aVolumeLog[volume];
     tAttCtrl.volumeR = aVolumeLog[volume];
+#endif
 }
 
 /*

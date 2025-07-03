@@ -6,28 +6,29 @@
 extern "C" {
 #endif
 
+#define VOLUME_ATT_0db          0x00400000
+    
+#define OUT_FRM_PCM16           0
+#define OUT_FRM_PCM32           1
+#define OUT_FRM_DSD64           2 // works with x16 or x32 oversampling only!
+#define OUT_FRM_DSD128          3 // works with x16 or x32 oversampling only!
+#define OUT_FRM_DSD256          4 // for DoP output only!
 
-#define OUT_FRM_PCM16       0
-#define OUT_FRM_PCM32       1
-#define OUT_FRM_DSD64       2 // works with x16 or x32 oversampling only!
-#define OUT_FRM_DSD128      3 // works with x16 or x32 oversampling only!
-#define OUT_FRM_DSD256      4 // for DoP output only!
+#define FIR_OVS_x1              0
+#define FIR_OVS_x2              1
+#define FIR_OVS_x4              2
+#define FIR_OVS_x8              3
+#define FIR_OVS_x16             4
+#define FIR_OVS_x32             5
 
-#define FIR_OVS_x1          0
-#define FIR_OVS_x2          1
-#define FIR_OVS_x4          2
-#define FIR_OVS_x8          3
-#define FIR_OVS_x16         4
-#define FIR_OVS_x32         5
+#define PCM_NSHAPE_DISABLE      0
+#define PCM_NSHAPE_ENABLE       1
 
-#define PCM_NSHAPE_DISABLE  0
-#define PCM_NSHAPE_ENABLE   1
+#define DITHERING_DISABLE       0
+#define DITHERING_ENABLE        1
 
-#define DITHERING_DISABLE   0
-#define DITHERING_ENABLE    1
-
-#define DG_OUT_DISABLE      0
-#define DG_OUT_ENABLE       1
+#define DG_OUT_DISABLE          0
+#define DG_OUT_ENABLE           1
 
 // *****************************************************************************
 // ************* User defines **************************************************
@@ -79,6 +80,9 @@ extern "C" {
 // Set 32bit frame word-clock & deglitcher waves values
 #define WCK32_VAL                       0x00000001u
 #define DG32_VAL                        0xFFFFE001u
+// Set constant Attenuation value. 0db - 1.0
+#define ATT_CONST                       (VOLUME_ATT_0db * 0.891)
+    
 // *****************************************************************************
 // *****************************************************************************
 // *****************************************************************************
