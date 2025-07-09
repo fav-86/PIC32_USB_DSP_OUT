@@ -43,13 +43,13 @@ extern "C" {
 #define SECONDARY_CRYSTAL_FREQUENCY_Hz  0u
 
 /* Define I2S masterclock */
-// #define I2S_MCLK_512Fs
+//#define I2S_MCLK_512Fs
 #define I2S_MCLK_1024Fs
 
 /* Define output frame mode */
 #define OUT_FRM_MODE                    OUT_FRM_PCM16
 /* Define default max FIR oversampling ratio */
-#define FIR_OVS_MAX                     FIR_OVS_x32
+#define FIR_OVS_MAX                     FIR_OVS_x16
 // define hysteresis to switch between PCM & DoP input modes
 #define DoP_PCM_SWITCH_HYS              10
 
@@ -63,7 +63,7 @@ extern "C" {
 // Set offset binary data format: 1 - offset bunary, 0 - 2's complement
 #define OFFSET_BINARY                   0
 // Set round data resolution in bits
-#define ROUND_DATA_WIDTH_bits           12
+#define ROUND_DATA_WIDTH_bits           16
 // Set output data width in bits
 #define OUTPUT_DATA_WIDTH_bits          16
 // Set LFSR dither noise seed (zero value turn dithering off)
@@ -78,10 +78,10 @@ extern "C" {
 #define WCK16_VAL                       0x0001u
 #define DG16_VAL                        0xFF81u
 // Set 32bit frame word-clock & deglitcher waves values
-#define WCK32_VAL                       0x00000001u
+#define WCK32_VAL                       0x0000FFFFu
 #define DG32_VAL                        0xFFFFE001u
 // Set constant Attenuation value. 0db - 1.0
-#define ATT_CONST                       (VOLUME_ATT_0db * 0.891)
+//#define ATT_CONST                       (VOLUME_ATT_0db * 0.94)
     
 // *****************************************************************************
 // *****************************************************************************

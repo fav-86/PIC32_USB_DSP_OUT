@@ -2,17 +2,21 @@
 #include "../../app/system.h"
 #include "dma.h"
 
+#define OB_MASK         ((int)OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits - 1))
+#define OFF16_DC        ((int)DC_OFFSET_LSB & 0x0000FFFF)
+#define OFF32_DC        ((int)DC_OFFSET_LSB)
+
 #if OUT_FRM_MODE == OUT_FRM_PCM16
     #define WCK_VAL     WCK16_VAL
     #define DG_VAL      DG16_VAL
     #define WSIZ        2
-    #define ZERO_VAL    ((OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits-1)) | (OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits-1+16)))
+    #define ZERO_VAL    (OFF16_DC ^ OB_MASK) + ((OFF16_DC ^ OB_MASK) << 16)
     #define WCKO_ENA
 #elif OUT_FRM_MODE == OUT_FRM_PCM32
     #define WCK_VAL     WCK32_VAL
     #define DG_VAL      DG32_VAL
     #define WSIZ        4
-    #define ZERO_VAL    (OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits-1))
+    #define ZERO_VAL    (OFF32_DC ^ OB_MASK)
     #define WCKO_ENA
 #else
     #define WCK_VAL     0
@@ -138,8 +142,19 @@ void dma_init (void)
     DCH5SSA = KVA_TO_PA( &zeroData );           // Source data start address
     DCH5SSIZ = 4;                               // Source size
     // Only separate fields support!!!!
-    DCH5ECONbits.CHSIRQ = _SPI_TX_VECTOR;       // Channel Transfer Start IRQ     
+    DCH5ECONbits.CHSIRQ = _SPI_TX_VECTOR;       // Channel Transfer Start IRQ    
 
+    /**************************************************************************/
+    /* Channel 6 config - to copy data from I2S2 module to EP5 FIFO buffer    */
+    /**************************************************************************/
+    DCH6SSA = KVA_TO_PA( &SPI2BUF );            // Source data start address (I2S2 FIFO buffer)
+    DCH6SSIZ = 4;                               // Source data saze (I2S FIFO data size - 4 bytes)
+    DCH6CSIZ = 4;                               // Cell data size: channel audio data size (4 bytes)
+    DCH6CONbits.CHPRI = 2;                      // Channel priority
+    DCH6CONbits.CHAEN = 1;                      // Channel is continuously enabled, and not automatically disabled after a block transfer is complete
+    // Only separate fields support!!!!
+    DCH6ECONbits.CHSIRQ = _SPI2_RX_VECTOR;      // Channel Transfer Start IRQ
+    DCH6ECONbits.SIRQEN = 1;                    // Enable transfer IRQ
 }
 
 /*
@@ -156,7 +171,7 @@ void dma_parallel_output_start (const uint16_t size)
     DCH5CONbits.CHAEN = 1;          // Channel is continuously enabled, and not automatically disabled after a block transfer is complete
     DCH5ECONbits.SIRQEN = 1;        // Enable transfer IRQ
     
-    // Enable DMA channel
+    // Enable DMA channels
     DCH4CONbits.CHEN = 1;    
     DCH5CONbits.CHEN = 1;
 }

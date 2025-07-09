@@ -3,6 +3,7 @@
 /* ************************************************************************** */
 #include "system.h"
 #include "dsp.h"
+#include "cal.h"
 
 #define DSP_DATA_MODE_PCM       0
 #define DSP_DATA_MODE_DoP       1
@@ -39,10 +40,13 @@ volatile static struct {
     int oash;		// out align shift (32 - data width)
     int obmsk;		// offset binary mask
     int shL;		// shape feedback value Left
-    int shR;		// shape feedback value Left
+    int shR;		// shape feedback value Right
     int lfsr1;		// LFSR random generate register
     int lfsr2;		// LFSR random generate register to triangle noise generation
-} tRndCtrl; 
+    int qdL;
+    int qdR;
+    void *pGCT;
+} tRndCtrl;
 
 /* SDM control srtucture */
 volatile static struct {
@@ -235,6 +239,7 @@ void dsp_init (void)
     tRndCtrl.obmsk = OFFSET_BINARY << 31;           // set offset binary mask
     tRndCtrl.lfsr1 = tDspCtrl.tPCM.dithen;          // set LFSR1 seed value
     tRndCtrl.lfsr2 = tDspCtrl.tPCM.dithen * 100;    // set LFSR2 seed value
+    tRndCtrl.pGCT = coefGlitch;
 #endif
     
     // Init volume control structure
@@ -317,6 +322,8 @@ void dsp_start_init(uint8_t sfreq, uint8_t wlen)
     // Cleare Shapers accumulators
     tRndCtrl.shL = 0;
     tRndCtrl.shR = 0;
+    tRndCtrl.qdL = 0;
+    tRndCtrl.qdR = 0;    
 #endif
 
     tDspCtrl.sfreq = sfreq;

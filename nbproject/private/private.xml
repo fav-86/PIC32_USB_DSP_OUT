@@ -3,8 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Projects/git_projects/PIC32_USB_DSP_OUT.X/src/app/dsp.c</file>
+            <file>file:/D:/Projects/git_projects/PIC32MZ_USB_DSP.X/src/app/dsp.c</file>
             <file>file:/D:/Projects/git_projects/PIC32MZ_USB_DSP.X/src/app/config.h</file>
+            <file>file:/D:/Projects/git_projects/PIC32MZ_USB_DSP.X/src/app/cal.h</file>
+            <file>file:/D:/Projects/git_projects/PIC32MZ_USB_DSP.X/src/app/system.h</file>
+            <file>file:/D:/Projects/git_projects/PIC32MZ_USB_DSP.X/src/app/asm/att.S</file>
+            <file>file:/D:/Projects/git_projects/PIC32MZ_USB_DSP.X/src/app/asm/ornd.S</file>
+            <file>file:/D:/Projects/git_projects/PIC32MZ_USB_DSP.X/src/app/system.c</file>
         </group>
     </open-files>
 </project-private>
