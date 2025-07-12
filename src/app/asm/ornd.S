@@ -429,19 +429,6 @@ shprnd_f16:
     // restore gain with saturation
     SHLL_S.W $v0, $v0, 2
     
-    // get bit chng mask
-    XOR $v1, $s0, $v0
-    // save rnd out val
-    ADDU $s0, $v0, $zero
-    // calc coef addr
-    SRL $v1, $v1, 26
-    ADDU $v1, $v1, $t9
-    // load coef
-    LB $v1, ($v1)
-    SLL $v1, $v1, 10
-    // Update shaping feedback
-    ADDU $t6, $t6, $v1
-    
     // Apply offset binary mask
     XOR $v0, $v0, $t5
     // Align output data to RJ
@@ -463,19 +450,6 @@ shprnd_f16:
     SUBU $t7, $v1, $v0
     // restore gain with saturation
     SHLL_S.W $v0, $v0, 2
-    
-    // get bit chng mask
-    XOR $v1, $s1, $v0
-    // save rnd out val
-    ADDU $s1, $v0, $zero
-    // calc coef addr
-    SRL $v1, $v1, 26
-    ADDU $v1, $v1, $t9
-    // load coef
-    LB $v1, ($v1)
-    SLL $v1, $v1, 10
-    // Update shaping feedback
-    ADDU $t7, $t7, $v1
     
     // Apply offset binary mask
     XOR $v0, $v0, $t5

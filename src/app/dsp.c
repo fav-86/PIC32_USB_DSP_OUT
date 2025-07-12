@@ -8,6 +8,16 @@
 #define DSP_DATA_MODE_PCM       0
 #define DSP_DATA_MODE_DoP       1
 
+#define OB_MASK         ((int)OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits - 1))
+#define OFF16_DC        ((int)DC_OFFSET_LSB & 0x0000FFFF)
+#define OFF32_DC        ((int)DC_OFFSET_LSB)
+
+#if OUT_FRM_MODE == OUT_FRM_PCM16
+    #define ZERO_VAL_PCM    (OFF16_DC ^ OB_MASK)
+#elif OUT_FRM_MODE == OUT_FRM_PCM32
+    #define ZERO_VAL_PCM    (OFF32_DC ^ OB_MASK)
+#endif
+
 /* Log Volume array with 70db range */
 static const int aVolumeLog[101] = {
     0,1438,1558,1689,1831,1985,2151,2332,2527,2739,
@@ -43,9 +53,6 @@ volatile static struct {
     int shR;		// shape feedback value Right
     int lfsr1;		// LFSR random generate register
     int lfsr2;		// LFSR random generate register to triangle noise generation
-    int qdL;
-    int qdR;
-    void *pGCT;
 } tRndCtrl;
 
 /* SDM control srtucture */
@@ -239,7 +246,6 @@ void dsp_init (void)
     tRndCtrl.obmsk = OFFSET_BINARY << 31;           // set offset binary mask
     tRndCtrl.lfsr1 = tDspCtrl.tPCM.dithen;          // set LFSR1 seed value
     tRndCtrl.lfsr2 = tDspCtrl.tPCM.dithen * 100;    // set LFSR2 seed value
-    tRndCtrl.pGCT = coefGlitch;
 #endif
     
     // Init volume control structure
@@ -320,10 +326,8 @@ void dsp_start_init(uint8_t sfreq, uint8_t wlen)
     tDoPunp.pCurr = &dspOutputFIFO[(OUTPUT_BUFFER_bSIZE/8)*3/4];
 #else
     // Cleare Shapers accumulators
-    tRndCtrl.shL = 0;
-    tRndCtrl.shR = 0;
-    tRndCtrl.qdL = 0;
-    tRndCtrl.qdR = 0;    
+    tRndCtrl.shL = ZERO_VAL_PCM;
+    tRndCtrl.shR = ZERO_VAL_PCM;
 #endif
 
     tDspCtrl.sfreq = sfreq;
