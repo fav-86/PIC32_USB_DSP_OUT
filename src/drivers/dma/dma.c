@@ -2,15 +2,15 @@
 #include "../../app/system.h"
 #include "dma.h"
 
+#define DATA_MASK       (((int)1 << OUTPUT_DATA_WIDTH_bits) - 1)
 #define OB_MASK         ((int)OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits - 1))
-#define OFF16_DC        ((int)DC_OFFSET_LSB & 0x0000FFFF)
-#define OFF32_DC        ((int)DC_OFFSET_LSB)
+#define OFF_DC          ((int)DC_OFFSET_LSB & DATA_MASK)
 
 #if OUT_FRM_MODE == OUT_FRM_PCM16
     #define WCK_VAL     WCK16_VAL
     #define DG_VAL      DG16_VAL
     #define WSIZ        2
-    #define ZERO_VAL    (OFF16_DC ^ OB_MASK) + ((OFF16_DC ^ OB_MASK) << 16)
+    #define ZERO_VAL    (OFF_DC ^ OB_MASK) + ((OFF_DC ^ OB_MASK) << 16)
     #define WCKO_ENA
 #elif OUT_FRM_MODE == OUT_FRM_PCM32
     #define WCK_VAL     WCK32_VAL

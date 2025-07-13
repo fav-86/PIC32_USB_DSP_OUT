@@ -377,10 +377,6 @@ shprnd_f32:
     Source data array must contain dual channel int32 data samples.
 */
 shprnd_f16:
-    ADDU $sp, $sp, -16
-    SW $s0, 0($sp)
-    SW $s1, 4($sp)
-    
     // load full quantize width (quantize width + 2)
     LW $t1, 0($a2)
     // load quantize shift (30 - quantize width)
@@ -395,12 +391,6 @@ shprnd_f16:
     LW $t7, 20($a2)
     // load LFSR1 value
     LW $t8, 24($a2)
-    // Load qdL 
-    LW $s0, 32($a2)
-    // Load qdR
-    LW $s1, 36($a2)
-    // Load cal arr pointer
-    LW $t9, 40($a2)
     
     // calc end address
     ADDU $a3, $a0, $a3 
@@ -470,13 +460,6 @@ shprnd_f16:
     SW $t7, 20($a2)
     // save LFSR1 value
     SW $t8, 24($a2)
-    // save qdL 
-    SW $s0, 32($a2)
-    // save qdR
-    SW $s1, 36($a2)
-    
-    LW $s0, 0($sp)
-    LW $s1, 4($sp)
-    ADDU $sp, $sp, 16
+
     // restore address pointer
     J $ra

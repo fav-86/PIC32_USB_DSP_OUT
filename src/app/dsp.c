@@ -8,15 +8,7 @@
 #define DSP_DATA_MODE_PCM       0
 #define DSP_DATA_MODE_DoP       1
 
-#define OB_MASK         ((int)OFFSET_BINARY << (OUTPUT_DATA_WIDTH_bits - 1))
-#define OFF16_DC        ((int)DC_OFFSET_LSB & 0x0000FFFF)
-#define OFF32_DC        ((int)DC_OFFSET_LSB)
 
-#if OUT_FRM_MODE == OUT_FRM_PCM16
-    #define ZERO_VAL_PCM    (OFF16_DC ^ OB_MASK)
-#elif OUT_FRM_MODE == OUT_FRM_PCM32
-    #define ZERO_VAL_PCM    (OFF32_DC ^ OB_MASK)
-#endif
 
 /* Log Volume array with 70db range */
 static const int aVolumeLog[101] = {
@@ -326,8 +318,8 @@ void dsp_start_init(uint8_t sfreq, uint8_t wlen)
     tDoPunp.pCurr = &dspOutputFIFO[(OUTPUT_BUFFER_bSIZE/8)*3/4];
 #else
     // Cleare Shapers accumulators
-    tRndCtrl.shL = ZERO_VAL_PCM;
-    tRndCtrl.shR = ZERO_VAL_PCM;
+    tRndCtrl.shL = 0;
+    tRndCtrl.shR = 0;
 #endif
 
     tDspCtrl.sfreq = sfreq;
@@ -349,10 +341,7 @@ void dsp_start_init(uint8_t sfreq, uint8_t wlen)
     // Cleare samples num
     _System_Num_Set(0);
     // Init output data pointer
-    uint32_t dmaptr = DMA_OUTPUT_TRANSFET_PTR;
-    dmaptr >>= 3;
-    dspOutPtr = dmaptr + (OUTPUT_BUFFER_bSIZE/8)*3/4;
-    dspOutPtr &= (OUTPUT_BUFFER_bSIZE/8-1);
+    dspOutPtr = (OUTPUT_BUFFER_bSIZE/8)*3/4;
     // start DMA output
     dma_parallel_output_start(OUTPUT_BUFFER_bSIZE);
 }
