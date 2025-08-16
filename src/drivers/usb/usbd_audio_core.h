@@ -158,7 +158,13 @@ enum {
 #define AUDIO_FB_EP                                   0x81U
 #define AUDIO_IN_EP                                   0x85U
 
-#define USB_AUDIO_CONFIG_DESC_SIZ                     258U //350-92
+    #ifdef SYSTEM_ATT_EN
+#define USB_AUDIO_CONFIG_DESC_SIZ                     240U //258-18
+    #else
+#define USB_AUDIO_CONFIG_DESC_SIZ                     258U //258
+    #endif
+
+
 
 
 #define AUDIO_OUT_TC                                  0x01U

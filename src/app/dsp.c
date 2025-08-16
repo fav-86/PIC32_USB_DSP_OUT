@@ -480,9 +480,13 @@ void dsp_proc (void)
         if (tDspCtrl.tFir.ovs == FIR_OVS_x1) {
             // Copy 4 samples to output buffer
             rndbuf[rndptr] = prFIR1[rptr1];
+            prFIR1[rptr1] = 0;
             rndbuf[rndptr+1] = prFIR1[rptr1+1];
+            prFIR1[rptr1+1] = 0;
             rndbuf[rndptr+2] = prFIR1[rptr1+2];
+            prFIR1[rptr1+2] = 0;
             rndbuf[rndptr+3] = prFIR1[rptr1+3];
+            prFIR1[rptr1+3] = 0;
             // FIR read pointer increment & masking
             rptr1 += 4;
             rptr1 &= (DSP_FIR1_FIFO_SIZE-1);
@@ -493,6 +497,11 @@ void dsp_proc (void)
         // ************* Stage 1 FIR x2 upsampler processing *****************
         if (tDspCtrl.tFir.ovs == FIR_OVS_x2) {
             FIR1_callback( &prFIR1[rptr1], &rndbuf[rndptr], &prFIR1[DSP_FIR1_FIFO_SIZE], DSP_FIR1_FIFO_bSIZE );
+            // cleare FIR FIFO buffer
+            prFIR1[rptr1] = 0;
+            prFIR1[rptr1+1] = 0;
+            prFIR1[rptr1+2] = 0;
+            prFIR1[rptr1+3] = 0;
             // FIR read pointer increment & masking
             rptr1 += 4;
             rptr1 &= (DSP_FIR1_FIFO_SIZE-1);
@@ -500,6 +509,11 @@ void dsp_proc (void)
             continue;
         }
         FIR1_callback( &prFIR1[rptr1], &pwFIR2[wptr2], &prFIR1[DSP_FIR1_FIFO_SIZE], DSP_FIR1_FIFO_bSIZE );
+        // cleare FIR FIFO buffer
+        prFIR1[rptr1] = 0;
+        prFIR1[rptr1+1] = 0;
+        prFIR1[rptr1+2] = 0;
+        prFIR1[rptr1+3] = 0;
         // FIR read pointer increment & masking
         rptr1 += 4;
         rptr1 &= (DSP_FIR1_FIFO_SIZE-1);

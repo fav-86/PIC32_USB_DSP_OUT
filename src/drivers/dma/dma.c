@@ -16,7 +16,7 @@
     #define WCK_VAL     WCK32_VAL
     #define DG_VAL      DG32_VAL
     #define WSIZ        4
-    #define ZERO_VAL    (OFF32_DC ^ OB_MASK)
+    #define ZERO_VAL    (OFF_DC ^ OB_MASK)
     #define WCKO_ENA
 #else
     #define WCK_VAL     0
